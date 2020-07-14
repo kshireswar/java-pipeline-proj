@@ -16,6 +16,9 @@ pipeline {
         }
         stage("java_pipeline_proj - Build") {
             steps {
+            sh ' mvn and java version: '
+            sh 'mvn --version'
+            sh 'java --version'
             sh 'mvn install'
             }
         }
