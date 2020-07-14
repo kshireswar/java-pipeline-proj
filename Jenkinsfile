@@ -1,29 +1,40 @@
 pipeline {
-    agent {
-        docker {
-            image 'maven:3-alpine' 
-            args '-v /root/.m2:/root/.m2' 
-        }
+    agent any
+    tools { 
+        maven 'Maven 3.6.3' 
+        jdk 'jdk11' 
     }
     stages {
-        stage('Build') { 
+        stage ('Initialize') {
             steps {
-                sh 'mvn -B -DskipTests clean package' 
+                sh '''
+                    echo "PATH = ${PATH}"
+                    echo "M2_HOME = ${M2_HOME}"
+                    echo "M2_HOME = ${JAVA_HOME}"
+                ''' 
             }
         }
-        stage('Test') {
+        stage("java_pipeline_proj - Build") {
             steps {
-                sh 'mvn test'
-            }
-            post {
-                always {
-                    junit 'target/surefire-reports/*.xml'
-                }
+            sh 'mvn install'
             }
         }
-        stage('Deliver') {
+        stage("docker image build") {
             steps {
-                sh './jenkins/scripts/deliver.sh'
+                sh '''
+                    echo "PATH = ${PATH}"
+                    echo "M2_HOME = ${M2_HOME}"
+                    echo "M2_HOME = ${JAVA_HOME}"
+                ''' 
+            }
+        }
+        stage("deploy") {
+            steps {
+                sh '''
+                    echo "PATH = ${PATH}"
+                    echo "M2_HOME = ${M2_HOME}"
+                    echo "M2_HOME = ${JAVA_HOME}"
+                ''' 
             }
         }
     }
